@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>GXS</title>
+        <link href="css/login.css" rel="stylesheet"></link>
+
+    </h:head>
+    <h:body class="fundo">
+        <h:form id="formLogin" class="login-page">
+            <p:growl showDetail="true" sticky="true" />
+
+            <h:panelGrid class="form" columns="1" cellpadding="5">
+                <h1 style="font-size:48px">Sistema GXS</h1>  <br/>
+
+                <p:inputText id="login" value="#{usuario.login}" placeholder="Usuário"></p:inputText>
+                <p:message for="login" display="icon" />
+
+                <p:password id="senha" value="#{usuario.senha}" placeholder="******"></p:password>
+                <p:message for="senha" display="icon" />               
+
+                <p:commandButton class="acessar" value="Acessar " action="#{usuario.acessar()}" ajax="false" update="formLogin" ><span></span></p:commandButton>
+
+            </h:panelGrid>
+        </h:form>
+    </h:body>
+</html>
+
