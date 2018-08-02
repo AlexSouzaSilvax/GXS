@@ -8,37 +8,39 @@ import javax.faces.context.FacesContext;
 @ManagedBean
 public class Usuario {
 
-    private String seqUsuario;
-    private String nome;
-    private String email;
+    private String idUsuario;
     private String login;
     private String senha;
+    private String nome;
+    private String email;
     private String situacao;
-    private String telefone;
-    private Date dataCadastro;
+    private Date dataCadastro = new Date();
 
-    public String getSeqUsuario() {
-        return seqUsuario;
+    public String acessar() {
+
+        FacesContext context = FacesContext.getCurrentInstance();
+
+        if (login.equals("alex") && senha.equals("123")) {
+            //context.addMessage(FacesMessage.FACES_MESSAGES, new FacesMessage("Usuário Válido!", "Bem - Vindo: " + login));
+            System.out.println("Usuário válido!\n" + "Login:  " + login + " | Senha: " + senha + "  Inseridos.");
+            return "Template";
+        }
+        context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Usuário Inválido", ""));
+        System.err.println("Usuário inválido!\n" + "Login:  " + login + " | Senha: " + senha + "  Inseridos.");
+        return "login";
     }
 
-    public void setSeqUsuario(String seqUsuario) {
-        this.seqUsuario = seqUsuario;
+    public String sair() {
+        System.out.println("Método sair chamado!");
+        return "login";
     }
 
-    public String getNome() {
-        return nome;
+    public String getIdUsuario() {
+        return idUsuario;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
+    public void setIdUsuario(String idUsuario) {
+        this.idUsuario = idUsuario;
     }
 
     public String getLogin() {
@@ -57,6 +59,22 @@ public class Usuario {
         this.senha = senha;
     }
 
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getSituacao() {
         return situacao;
     }
@@ -65,38 +83,11 @@ public class Usuario {
         this.situacao = situacao;
     }
 
-    public String getTelefone() {
-        return telefone;
-    }
-
-    public void setTelefone(String telefone) {
-        this.telefone = telefone;
-    }
-
     public Date getDataCadastro() {
         return dataCadastro;
     }
 
     public void setDataCadastro(Date dataCadastro) {
         this.dataCadastro = dataCadastro;
-    }
-
-    public String acessar() {
-
-        FacesContext context = FacesContext.getCurrentInstance();
-
-        if (login.equals("alex") && senha.equals("123")) {
-            //context.addMessage(FacesMessage.FACES_MESSAGES, new FacesMessage("Usuário Válido!", "Bem - Vindo: " + login));
-            System.out.println("Usuário válido!\n" + "Login:  " + login + " | Senha: " + senha + "  Inseridos.");
-            return "teste";
-        }
-        context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Usuário Inválido", ""));
-        System.err.println("Usuário inválido!\n" + "Login:  " + login + " | Senha: " + senha + "  Inseridos.");
-        return "login";
-    }
-
-    public String sair() {
-        System.out.println("Método sair chamado!");
-        return "login";
     }
 }
