@@ -1,0 +1,210 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+        <script type="text/javascript">
+            function skinChart() {
+                this.cfg.shadow = false;
+                this.cfg.seriesColors = ['#71CC8D', '#33AFDE', '#F7941E'];
+                this.cfg.grid = {
+                    background: '#EDF3F6',
+                    borderColor: '#D9E3E8',
+                    gridLineColor: '#D9E3E8',
+                    shadow: false
+                };
+                this.cfg.axesDefaults = {
+                    rendererOptions: {
+                        textColor: '#778D9B'
+                    }
+                };
+                this.cfg.seriesDefaults = {
+                    shadow: false,
+                    markerOptions: {
+                        shadow: false
+                    }
+                }
+            }
+            function skinPie() {
+                this.cfg.seriesColors = ['#dae8ef', '#27aae1', '#33ccff', '#9fadb5'];
+                this.cfg.grid = {
+                    background: '#ffffff',
+                    borderColor: '#eaeaea',
+                    gridLineColor: '#e5ebf0',
+                    shadow: false,
+                    borderWidth: 0
+                };
+                this.cfg.seriesDefaults.shadow = false;
+            }
+            /*Botão topo*/
+            $(document).ready(function () {
+                $(window).scroll(function () {
+                    if ($(this).scrollTop() > 100) {
+                        $('a[href="#top"]').fadeIn();
+                    } else {
+                        $('a[href="#top"]').fadeOut();
+                    }
+                });
+                $('a[href="#top"]').click(function () {
+                    $('html, body').animate({scrollTop: 0}, 800);
+                    return false;
+                });
+            });
+        </script>
+        <style type="text/css">
+            .jqplot-target, .jqplot-axis {
+                color: #778D9B;
+            }
+            /*Botão topo */
+            a[href="#top"]{
+                padding:10px;
+                position:fixed;
+                top: 90%;
+                right:2px;
+                display:none;
+                font-size: 30px;
+            }
+            a[href="#top"]:hover{
+                text-decoration:none;
+            }
+        </style>
+
+    </ui:define>
+
+    <ui:define name="content"  >
+
+        <div class="layout-portlets-box" >
+            <div class="Container100 ui-fluid">
+                <div class="ContainerIndent"> 
+
+                    <a href="#top"><p:commandButton icon="fa fa-arrow-up Fs18 white"/></a>
+
+                    <p:messages id="messages5"  autoUpdate="true" closable="true" />
+
+                    <h:form id="frmLista" >
+
+                        <p:panelGrid columns="4"  layout="grid" styleClass="ui-panelgrid-blank" columnClasses="ui-grid-col-10,ui-grid-col-3,ui-grid-col-0,ui-grid-col-0" rendered="#{usuarioController.tela == 0}" >
+                            <h2 style="color:black">Cadastro de Usuários</h2>
+
+                            <p:inputText value="#{usuarioController.pesquisa}"/>
+                            <p:commandButton value="Buscar" actionListener="#{usuarioController.lista()}" update="listaPesquisa" />
+                            <p:commandButton value="Novo" immediate="true" actionListener="#{usuarioController.novo()}" update=":frmDetalhe :frmLista" />
+
+                        </p:panelGrid>
+
+                        <div class="Container100 Responsive100" >
+                            <p:dataTable id="listaPesquisa" value="#{usuarioController.listaUsuarios}" var="p" rendered="#{usuarioController.tela == 0}" reflow="true" emptyMessage="Lista vazia" paginator="true" rows="15"  rowsPerPageTemplate="15,50,100">
+
+                                <p:column headerText="ID" sortBy="#{p.id}">
+                                    <p:commandLink value="#{p.id}" title="#{p.id}" actionListener="#{usuarioController.seleciona(p)}" ajax="false" update=":frmDetalhe :frmLista" />
+                                </p:column>
+
+                                <p:column headerText="Nome" sortBy="#{p.nome}">
+                                    <p:commandLink value="#{p.nome}" title="#{p.nome}" actionListener="#{usuarioController.seleciona(p)}" ajax="false" update=":frmDetalhe :frmLista" />
+                                </p:column>
+
+                                <p:column headerText="Login" sortBy="#{p.login}">
+                                    <p:commandLink value="#{p.login}" title="#{p.login}" actionListener="#{usuarioController.seleciona(p)}" ajax="false" update=":frmDetalhe :frmLista" />
+                                </p:column>
+
+                                <p:column headerText="Email" sortBy="#{p.email}">
+                                    <h:outputText value="#{p.email}" title="#{p.email}" />
+                                </p:column>
+
+                                <p:column headerText="Data Cadastro" sortBy="#{p.dtCadastroFormatada}">
+                                    <h:outputText value="#{p.dtCadastroFormatada}" title="#{p.dtCadastroFormatada}"  >
+                                        <!--f:convertDateTime type="date" pattern="dd/MM/yyyy" dateStyle="medium" locale="pt" /-->
+                                        <h:outputText value="#{p.dtCadastroFormatada}" title="#{p.dtCadastroFormatada}" />
+                                    </h:outputText>
+                                </p:column>
+
+                                <p:column headerText="Detalhe" width="8%">
+                                    <p:commandButton icon="fa fa-search Fs18 white"  actionListener="#{usuarioController.seleciona(p)}" ajax="false" update=":frmDetalhe :frmLista"/>
+                                </p:column>
+
+                            </p:dataTable>
+
+                        </div>
+                    </h:form>
+
+                    <h:form id="frmDetalhe">
+                        <p:panelGrid rendered="#{usuarioController.tela == 1}"  columns="5"  layout="grid" styleClass="ui-panelgrid-blank" columnClasses="ui-grid-col-10,ui-grid-col-3,ui-grid-col-0,ui-grid-col-0">
+
+                            <p:panelGrid>
+                                <h2>Usuários</h2>
+                            </p:panelGrid>
+                            <p:panelGrid></p:panelGrid>
+
+                            <p:commandButton value="Salvar" actionListener="#{usuarioController.salvar()}" update=":frmDetalhe :frmLista" />            
+                            <p:commandButton value="Voltar" immediate="true" actionListener="#{usuarioController.voltar()}" update=":frmDetalhe :frmLista" />
+
+                            <p:commandButton value="Deletar" styleClass="RedButton" actionListener="#{usuarioController.deletar()}"  update=":frmDetalhe :frmLista" >
+                                <p:confirm header="Confirmação" message="Deseja excluir o registro?" icon="ui-icon-alert" />
+                            </p:commandButton>
+                            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                                <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" />
+                                <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" />
+                            </p:confirmDialog>                                                              
+
+                        </p:panelGrid>
+
+                        <p:separator/>
+
+                        <p:panelGrid rendered="#{usuarioController.tela == 1}" columns="1" layout="grid" styleClass="ui-panelgrid-blank"  >                           
+
+                            <p:panelGrid  columns="3" layout="grid" styleClass="ui-panelgrid-blank" columnClasses="ui-grid-col-3,ui-grid-col-3" >                           
+
+                                <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank"  > 
+                                    <h:outputText value="Nome Completo"  />                
+                                    <p:inputText value="#{usuarioController.usuario.nome}" required="true" requiredMessage="[NOME] é Obrigatório!"/>                
+                                </p:panelGrid>
+
+                                <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank" >
+                                    <h:outputText value="E-mail" />
+                                    <p:inputText value="#{usuarioController.usuario.email}" required="true" requiredMessage="[EMAIL] é Obrigatório!"/>                                    
+                                </p:panelGrid> 
+
+                            </p:panelGrid>
+
+                            <p:panelGrid  columns="3" layout="grid" styleClass="ui-panelgrid-blank" columnClasses="ui-grid-col-3,ui-grid-col-3" >  
+
+                                <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank" > 
+                                    <h:outputText value="Login"  />                
+                                    <p:inputText  value="#{usuarioController.usuario.login}" required="true" requiredMessage="[LOGIN] é Obrigatório!"/>                
+                                </p:panelGrid>
+
+                                <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank" > 
+                                    <h:outputText value="Senha" />
+                                    <p:inputText value="#{usuarioController.usuario.senha}" required="true" requiredMessage="[SENHA] é Obrigatório!"/>                
+                                </p:panelGrid> 
+
+                            </p:panelGrid>
+
+                            <p:separator/>
+                            <p:separator/>
+
+                            <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank" columnClasses="ui-grid-col-3,ui-grid-col-3"> 
+
+                                <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank">
+                                    <h:outputText value="Data Cadastro:" />
+                                    <!--p:calendar locale="pt" pattern="dd/MM/yyyy" required="true" value="#{usuarioController.usuario.dtCadastro}"></p:calendar-->
+                                    <p:outputLabel value="#{usuarioController.usuario.dtCadastroFormatada}"></p:outputLabel>
+                                </p:panelGrid> 
+
+                                <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank">
+                                    <h:outputText value="Data Ultima Alteração:" />
+                                    <p:outputLabel value="#{usuarioController.usuario.dtUltAlteracaoFormatada}"></p:outputLabel>
+                                </p:panelGrid> 
+
+                            </p:panelGrid>
+
+                        </p:panelGrid>                            
+                    </h:form>
+                </div>
+            </div>
+        </div>       
+    </ui:define>
+
+</ui:composition>
